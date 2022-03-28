@@ -1,0 +1,44 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <title>Havola.uz</title>
+    </head>
+    <body>
+        <h1 style="text-align:center">Havola qo'shish</h1>
+    
+        <h2>HTML Forms</h2>
+
+        {% comment %} <form action="" method="POST"  class="" id="">
+        
+            <label for="">Link name:</label> <br>
+            <input type="text" name="name" placeholder="link nomini yozing..."
+                 value="{{data.name}}"    required />
+            <small style="color:red;"> {% if errors.name %}{{errors.name}}{% endif %} </small>
+            <br><br>
+
+            <label for="">Link description:</label> <br>
+            <textarea name="description" placeholder="link haqida izoh.."
+                >{{data.description}}</textarea>
+            </br><br>
+            
+            <label for=""> Link url</label> </br>
+            <input type="text" name="url" placeholder="link urlini ko'rsating" 
+                value="{{data.url}}" required />
+            <small style="color:red;"> {% if errors.url %}{{errors.url}}{% endif %} </small>
+            
+            <br><br>
+            
+            <input type="submit" value="Yuborish">
+            {% csrf_token %}
+        </form>  {% endcomment %}
+        <form method="POST"> {% csrf_token %}
+            {{form.as_p}}
+            {% comment %} {{form.as_ul}}  {% endcomment %}
+            <input type="submit" value="Yuborish">
+        </form>
+
+        <p>"Yuborish" tugmasi bosilganda kiritilgan ma'lumotlar POST metodi orqali
+            serverga jo'natiladi!!.</p>
+
+    </body>
+</html>
