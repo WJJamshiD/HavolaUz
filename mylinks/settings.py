@@ -139,3 +139,6 @@ LOGIN_URL = '/users/login'
 LOGIN_REDIRECT_URL = '/users/check-user'
 LOGOUT_REDIRECT_URL = '/havolalar'
 # APPEND_SLASH = False
+
+
+AUTH_USER_MODEL = 'users.User'  # '<app.Model>'
