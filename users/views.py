@@ -6,10 +6,12 @@ from django.contrib.auth.forms import UserCreationForm
 # from core.forms import RegisterForm # AuthenticationForm - login uchun form
 # from core.forms import RegisterForm
 from .forms import LoginForm, RegisterForm
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
+USER = get_user_model()
+# USER = settings.AUTH_USER_MODEL
 
 @login_required
 def check_user(request):
@@ -65,11 +67,11 @@ def register_view(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = User.objects.create(username=username)
-            user.set_password(password)
-            user.save()
+            fields = form.cleaned_data
+            del fields['password_confirmation']
+            user = USER.objects.create_user(**fields)
+            # user.set_password(password)
+            # user.save()
             return render(request, 'registration/registration_finish.html', {})
     
     return render(request, 'registration/register.html', {'form': form})
