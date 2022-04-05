@@ -145,10 +145,13 @@ AUTH_USER_MODEL = 'users.User'  # '<app.Model>'
 
 # Email configurations
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'# 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.yandex.ru'# 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_SSL = True 
 EMAIL_USE_TSL = False
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'havolauz@yandex.com' # havola.uz 'admin@havola.uz'
-EMAIL_HOST_PASSWORD = 'bxdljelxnsdogfqs'  # app password
-DEFAULT_FROM_EMAIL = 'havolauz@yandex.com'
+# EMAIL_HOST_USER = 'havolauz@yandex.com'
+EMAIL_HOST_USER = 'djangotest39@gmail.com'
+# EMAIL_HOST_PASSWORD = 'bxdljelxnsdogfqs'  # app password
+EMAIL_HOST_PASSWORD = 'django.123'  # common password
+DEFAULT_FROM_EMAIL = 'djangotest39@gmail.com'

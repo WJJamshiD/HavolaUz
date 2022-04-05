@@ -5,23 +5,23 @@ from .models import User
 
 class LoginForm(forms.Form):
     
-    username = forms.CharField(required=True)
+    email = forms.EmailField(required=True) # error_messages={"required": "", "invalid": ""}
     password = forms.CharField(required=True, widget=PasswordInput)
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        if not User.objects.filter(username=username).exists():
-            raise forms.ValidationError('Bunday username ga ega foydalanuvchi topilmadi.')
-        return username
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Ushbu email tizimda ro\'yxatdan o\'tkazilmagan.')
+        return email
     
     def clean_password(self):
-        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
         password = self.cleaned_data['password']
-        if username:
-            user = User.objects.filter(username=username).first()
+        if email:
+            user = User.objects.filter(email=email).first()
             if user:
                 if not user.check_password(password):
-                    raise forms.ValidationError('Parol notog\'ri')
+                    raise forms.ValidationError('Parol notog\'ri kiritildi.')
         return password
 
 

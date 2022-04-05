@@ -5,6 +5,8 @@ from django.contrib.auth.models import (
     BaseUserManager,
     UserManager
 )
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 class CustomUserManager(BaseUserManager):
@@ -55,9 +57,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField('Date joined', auto_now_add=True)
+    token_for_activation = models.CharField(max_length=50, null=True, blank=True)
 
     USERNAME_FIELD = 'email' # null=False, unique=True
 
     REQUIRED_FIELDS = ['first_name']
 
     objects = CustomUserManager() # objects.create() create_user()
+
+    def email_user(self, subject, message, **kwargs):
+        return send_mail(
+            subject=subject,
+            message=message,
+            html_message=kwargs.get('html_message', None),
+            recipient_list=[self.email],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            fail_silently=kwargs.get('fail_silently', True)
+        )
