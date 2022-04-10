@@ -64,3 +64,38 @@ class RegisterForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('Ushbu email sistemada ro\'yxatdan o\'tkazilgan.')
         return email
+
+
+class PasswordResetForm(forms.Form):
+    
+    email = forms.EmailField(required=True) # error_messages={"required": "", "invalid": ""}
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('Ushbu email tizimda ro\'yxatdan o\'tkazilmagan.')
+        return email
+
+
+class PasswordChangeForm(forms.Form):
+    password = forms.CharField(max_length=100, label='Parol',
+                        widget=forms.PasswordInput(attrs={'class': 'special'}))
+    password2 = forms.CharField(max_length=100, label='Parolni tasdiqlash',
+                        widget=forms.PasswordInput)
+
+    def clean_password(self):
+        parol = self.cleaned_data['password']
+        if len(parol) < 7:
+            raise forms.ValidationError('Parol kamida 7ta belgidan iborat bo\'lishi lozim')
+        if parol.isnumeric():
+            raise forms.ValidationError('Parolda kamida bitta harf yoki belgi ishtirok etishi lozim')
+        if parol.isalpha():
+            raise forms.ValidationError('Parolda kamida bitta raqam ishtirok etishi lozim')
+        return parol
+
+    def clean_password2(self):
+        password = self.data['password']
+        confirm_password = self.cleaned_data['password2']
+        if password != confirm_password:
+            raise forms.ValidationError('Tasdiqlash paroli notogri')
+        return confirm_password

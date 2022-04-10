@@ -25,8 +25,9 @@ SECRET_KEY = 'django-insecure-d4cat&)t#2dtd1eo7+@(oj8ifzeq0#2ak1)va#0nueban#*9i%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -128,7 +129,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static/'   # localhost:8000/static/cdn/..
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'cdn/static'  # os.path.join(BASE_DIR, 'cdn', 'static)
+]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles' # faqat production da kerak: python manage.py collectstatic
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
