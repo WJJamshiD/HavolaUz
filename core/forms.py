@@ -1,4 +1,3 @@
-from this import d
 from django import forms
 from django.forms import ValidationError
 from .models import Link
