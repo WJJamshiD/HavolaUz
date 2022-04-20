@@ -11,20 +11,6 @@ LANGUAGES = (
     ("Several", "Bir nechta"),    
 )
 
-
-class Link(models.Model):
-    name = models.CharField(max_length=50)   # Varchar(50)
-    description = models.TextField(null=True)         # varchar(-)
-    url = models.URLField(help_text='Iltimos to\'g\ri URL kiriting!')                  # Varchar()
-    created_at = models.DateTimeField(auto_now_add=True)      # TIMESTAMP
-    modified_at = models.DateTimeField(auto_now=True)
-
-    # objects = models.Manager()
-
-    def __str__(self):  # -> str(object) => 
-        return self.name
-
-
 class LinkType(models.Model):
     # id = models.PrimaryKey(unique=True)
     name = models.CharField(max_length=100)
@@ -46,7 +32,7 @@ class Section(models.Model):
 
 class GeneralLink(models.Model):
     name = models.CharField(max_length=250)
-    url = models.URLField(max_length=350)
+    url = models.URLField(max_length=350, null=True, blank=True)
     photo = models.ImageField(upload_to='general-link')
     # need to install Pillow to use ImageField (pip install Pillow)
     type = models.ForeignKey(LinkType, on_delete=models.SET_NULL, null=True)
@@ -54,10 +40,10 @@ class GeneralLink(models.Model):
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True)
     short_description = models.CharField(max_length=150)
     description = models.TextField(null=True, blank=True)
-    tags = models.ManyToManyField("Tag")
-    company = models.ForeignKey("Company", on_delete=models.SET_NULL, null=True)
-    language = models.CharField(max_length=50, choices=LANGUAGES)
-    author = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True)
+    tags = models.ManyToManyField("Tag", blank=True)
+    company = models.ForeignKey("Company", on_delete=models.SET_NULL, null=True, blank=True)
+    language = models.CharField(max_length=50, choices=LANGUAGES, null=True, blank=True)
+    author = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.SlugField(max_length=250, unique=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)

@@ -1,18 +1,15 @@
-<!DOCTYPE html5>
-<html>
-    <head>
-        <title>Havola.uz</title>
-    </head>
-    <body>
-        <h1 style="text-align:center">Havolalar</h1>
-        
-        {% for link in linklar %}
-            <h2 style="padding:10px; background:#80808082;
-                border: 1px solid #808080;width:200px; margin:5px auto;">
-                <a href="/" style="text-decoration:none;color:black;">
-                    {{link.id}}. {{link.name}} 
-                </a>
-            </h2>
-        {% endfor %}
-    </body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 style="text-align:center">Havolalar</h1>
+    
+    {% for link in links %}
+        <h2 style="padding:10px; background:#80808082;
+            border: 1px solid #808080;width:200px; margin:5px auto;">
+            <a href="/" style="text-decoration:none;color:black;">
+                {{link.id}}. {{link.name}} 
+            </a>
+        </h2>
+    {% endfor %}
+
+{% endblock content %}

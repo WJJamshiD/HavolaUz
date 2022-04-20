@@ -1,31 +1,31 @@
 from django import forms
 from django.forms import ValidationError
-from .models import Link
+# from .models import Link
 #  Error()
 
-class LinkForm(forms.ModelForm):
+# class LinkForm(forms.ModelForm):
 
-    class Meta:
-        model = Link
-        fields = ['name', 'description', 'url'] # ('name', 'description', 'url')
+#     class Meta:
+#         model = Link
+#         fields = ['name', 'description', 'url'] # ('name', 'description', 'url')
 
     # def clean_<field_name>(self):
     #     pass    
 
-    def clean_description(self):
-        description = self.cleaned_data['description']
-        if len(description.split()) < 3:
-            raise ValidationError('Izoh kamida 3 ta so\'zdan iborat bo\'lishi kerak.')
+    # def clean_description(self):
+    #     description = self.cleaned_data['description']
+    #     if len(description.split()) < 3:
+    #         raise ValidationError('Izoh kamida 3 ta so\'zdan iborat bo\'lishi kerak.')
         
-        return description
+    #     return description
 
-    def clean(self):
-        super().clean()
-        url_data = self.cleaned_data['url']
-        if Link.objects.filter(url=url_data).exists():
-            raise ValidationError('Bunday havola allaqachon qo\'shilgan')
+    # def clean(self):
+    #     super().clean()
+    #     url_data = self.cleaned_data['url']
+    #     if Link.objects.filter(url=url_data).exists():
+    #         raise ValidationError('Bunday havola allaqachon qo\'shilgan')
         
-        return self.cleaned_data
+    #     return self.cleaned_data
 
 
 class RegisterForm(forms.Form):

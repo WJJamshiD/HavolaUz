@@ -18,3 +18,35 @@ body {
     border: 1px solid #80808059!important;
     box-shadow: none;
 }
+.navbar-menu li a {
+    font-weight: 500;
+    color: #6C757D !important;
+}
+@media screen and (max-width: 991px) {
+    ul.navbar-menu {
+        overflow-x: scroll;
+    }
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+ul.navbar-menu::-webkit-scrollbar {
+    display: none;
+}
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+ul.navbar-menu {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.custom-shadow {
+    box-shadow: 0rem .2rem .5rem rgba(0,0,0,.15)!important;
+}
+.text-main-hover:hover, .text-main-active {
+    color: #ffc289 !important
+}
+.header-nav .navbar-nav .dropdown-menu {
+    position: absolute;
+}
+.header-nav .dropdown-menu[data-bs-popper] {
+    right: 0;
+    left: auto;
+}

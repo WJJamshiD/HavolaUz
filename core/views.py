@@ -1,35 +1,17 @@
-from os import link
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http.response import HttpResponse, Http404, HttpResponseRedirect
-from core.models import Link
-from core.forms import LinkForm, RegisterForm
-
-def hello(request):
-    # logic goes here
-    # return HttpResponse("<h1>Hello, World!</h1>")
-    return render(request, "hello.html", {})
+from core.models import GeneralLink, Section
 
 
-def bye(request):
-    # logic goes here
-    return HttpResponse("<h1>Good Bye, Guys!</h1>")
-
-# def link_list(request):
-#     links = Link.objects.all()
-#     _html_template = loader.get_template('link_list.html')
-#     context = {
-#         "title": "Bu sarlavha",
-#         "linklar": links
-#     }
-#     _html = _html_template.render(context, request)
-#     return HttpResponse(_html)
-
-def link_list(request): # list-view
-    links = Link.objects.all() # queryset
+def link_list(request, slug):
+    section = get_object_or_404(Section, slug=slug) # slug=areas -> Section=Sohalar
+    # links = GeneralLink.objects.filter(section=section)
+    links = section.generallink_set.all()
+    linktypes = section.linktype_set.all()
     context = {
-        "title": "Bu sarlavha",
-        "linklar": links
+        'links': links,
+        'linktypes': linktypes
     }
     return render(request, "link_list.html", context) # shortcuts
 
@@ -118,17 +100,3 @@ def link_update(request, link_id):
             return redirect('/havolalar/') # domain.nomie/havolalar/
 
     return render(request, 'link_update.html', {'form': form})
-
-
-def register(request):
-    form = RegisterForm()
-    print('is_boound', form.is_bound)
-    print('fields', form.fields)
-
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        print('data', form.data)
-        if form.is_valid():
-            pass
-        print('cleaned_form', form.cleaned_data)
-    return render(request, "register.html", {'form': form})
