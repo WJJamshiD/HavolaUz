@@ -24,6 +24,7 @@ class LinkType(models.Model):
 
 class Section(models.Model):
     name = models.CharField(max_length=100)
+    short_description = models.CharField(max_length=150)
     slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):

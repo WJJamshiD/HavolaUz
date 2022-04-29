@@ -7,33 +7,77 @@
 
     <div class="row">
         <div class="col-8 offset-2">
+            <!--begin:: LINK TYPES -->
             <ul class="link-categories d-flex flex-row flex-wrap px-3 justify-content-center" style="gap:5px">
-                <li class="shadow active"><a>BARCHASI</a></li>
-                <li class="shadow"><a>API</a></li>
-                <li class="shadow"><a>CMS</a></li>
-                <li class="shadow"> DASTURLASH TILI</li>
-                <li class="shadow">DEVOPS</li>
-                <li class="shadow"> DIZAYN</li>
-                <li class="shadow">FREYMVORK</li>
-                <li class="shadow">GUI</li>
-                <li class="shadow">HOSTING / SERVER</li>
-                <li class="shadow">IDE</li>
-                <li class="shadow">IZLASH</li>
-                <li class="shadow">KOD MUHARRIRI</li>
-                <li class="shadow">KUTUBXONA</li>
-                <li class="shadow">LOYIHANI BOSHQARISH</li>
-                <li class="shadow">MA'LUMOTLAR OMBORI</li>
-                <li class="shadow">MANBA KODI</li>
+                <li class="shadow active"><a>Barchasi</a></li>
+                {% for type in linktypes %}    
+                <li class="shadow"><a>{{type.name}}</a></li>
+                {% endfor %}
             </ul>
+            <!--end:: LINK TYPES -->
+            <p class="text-center" style="font-size: 1.1rem;">
+               {{section.short_description}}
+            </p>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-2">
         <div class="col-8 offset-2 px-4">
+            <div class="filter-buttons d-flex justify-content-between">
+                <span class="dropdown-toggle bg-white custom-shadow px-2 py-1 rounded"
+                    id="toggleFilter"  role="button">
+                    <i class="fa-solid fa-filter"></i>
+                </span>
+                
+                <span class="d-flex" style="gap:6px">
+                    <span>
+                        <a class="nav-link dropdown-toggle bg-main plus text-white custom-shadow px-2 py-1 rounded"
+                            href="#" role="button">
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                    </span>
+
+                    <span class="dropdown" style="padding-top: 4px;">
+                        <span class="dropdown-toggle bg-white custom-shadow px-2 py-1 rounded" 
+                            role="button" data-bs-toggle="dropdown" id="sortDropdown">
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </span>
+                        <ul class="dropdown-menu border-0 custom-shadow" aria-labelledby="sortDropdown"
+                                                                         data-bs-popper="none">
+                            <li><span class="dropdown-item" role="button">A-Z</span></li>
+                            <li><span class="dropdown-item" role="button">Z-A</span></li>
+                            <li><span class="dropdown-item" role="button">Yuqori reytingdagilar</span></li>
+                            <li><span class="dropdown-item" role="button">Eng so'ngilari</span></li>
+                        </ul>
+                    </span>
+                </span>
+            </div>
+            <div class="filter-options d-none row link-card card flex-row w-100 mx-auto px-1 py-3 mt-2"
+                                                    style="border-radius:7px;">
+                <div class="col-8 col-md-9">
+                    <select class="form-control form-select py-1" style="background-color:#ededef;" role="button">
+                        <option>Tanlang</option>
+                        <option value="">3D Grafika</option>
+                        <option value="">1C Bitrix</option>
+                    </select>
+                </div>
+                <div class="col-4 col-md-3">
+                    <button class="w-100 bg-main text-white border-0 py-1 rounded">Filterlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--begin:: LIST OF LINKS-->
+    <div class="row">
+        
+        {% for link in links %}
+        <!--begin: SINGLE LINK CARD-->
+        <div class="col-8 offset-2 px-4 mb-3">
             <div class="link-card card border-0 d-flex flex-row p-1" style="border-radius:7px;">
                 <div class="image-wrapper m-2 overflow-hidden" style="width:75px;height:75px;">
                     <a src="">
-                        <img class="w-100" src="https://havola.uz/uploads/logos/90/gewzvppa.png"/>
+                        <img class="w-100" src="{{link.photo.url}}"/>
                     </a>    
                 </div>
                 
@@ -41,16 +85,18 @@
                     <div class="content w-100">
                         <div class="link-title">
                             <h3 class="mb-0">
-                                <a href="" class="text-main-hover">3D Grafika</a>
+                                <a href="" class="text-main-hover">{{link.name}}</a>
                             </h3>
                         </div>
                         
                         <div class="link-type">
-                            <a class="mb-0 text-decoration-none text-hover-black" style="color: #808080c4;">Dizayn</a>
+                            <a class="mb-0 text-decoration-none text-hover-black" style="color: #808080c4;">
+                                {{link.type}}
+                            </a>
                         </div>
                         
                         <div class="link-short-description">
-                            <p class='mb-0'>Kompyuter grafikasi yordamida obyektning 3 o'lchamli tasvirini yaratish</p>
+                            <p class='mb-0'>{{link.short_description}}</p>
                         </div>
                     
                         <div class="link-buttons pt-2 d-flex pb-1" style="gap: .7rem;">
@@ -79,60 +125,39 @@
                 </div>
             </div>
         </div>
+        <!--end: SINGLE LINK CARD-->
+        {% endfor %}
+        
     </div>
+    <!--end:: LIST OF LINKS-->
 
-    <div class="row my-3">
-        <div class="col-8 offset-2 px-4">
-            <div class="link-card card border-0 d-flex flex-row p-1" style="border-radius:7px;">
-                <div class="image-wrapper m-2 overflow-hidden" style="width:75px;height:75px;">
-                    <img class="w-100" src="https://havola.uz/uploads/logos/90/gewzvppa.png"/>
-                </div>
-                
-                <div class="content-wrapper my-2 px-1 d-flex flex-row" style="width: calc(100% - 80px);">
-                    <div class="content w-100">
-                        <div class="link-title">
-                            <h3 class="mb-0">
-                                <a href="" class="text-main-hover">3D Grafika</a>
-                            </h3>
-                        </div>
-                        
-                        <div class="link-type">
-                            <a class="mb-0 text-decoration-none text-hover-black" style="color: #808080c4;">Dizayn</a>
-                        </div>
-                        
-                        <div class="link-short-description">
-                            <p class='mb-0'>Kompyuter grafikasi yordamida obyektning 3 o'lchamli tasvirini yaratish</p>
-                        </div>
-                    
-                        <div class="link-buttons pt-2 d-flex pb-1" style="gap: .7rem;">
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-graduation-cap"></i></button>
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-book-open"></i></button>
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-star"></i></button>
-                            <button class="shadow border-0 bg-white ms-2 text-main-light" style="border-radius:4px;"><i class="fa-solid fa-up-right-from-square"></i> Havola</button>
-                        </div>
-                    </div>
-                    
-                    <div class="like-wrapper d-flex flex-column align-items-center my-2 ms-4 me-2">
-                        
-                        <button class="shadow border-0 bg-white gray-color like-btn" style="border-radius:4px;">
-                            <i class="fa-solid fa-chevron-up"></i>
-                        </button>
-
-                        <p class="link-rate my-1">2</p>
-                        
-                        <button class="shadow border-0 bg-white gray-color like-btn" style="border-radius:4px;">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <br>
     <br>
     <br>
-</dvi>
-
-
+</div>
 
 {% endblock content %}
+
+{% block js %}
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(event) {
+        
+        document.getElementById('toggleFilter').addEventListener('click',
+            function() {
+                var filterWrapper = document.getElementsByClassName('filter-options')[0]
+                // if (filterWrapper.classList.contains('d-none')) {
+                //    filterWrapper.classList.remove('d-none')
+                // }
+                // else {
+                //    filterWrapper.classList.add('d-none')
+                //}
+                filterWrapper.classList.toggle('d-none')
+            }
+        );
+
+    });
+</script>
+  
+
+{% endblock js %}
