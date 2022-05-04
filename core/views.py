@@ -1,19 +1,41 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.http.response import HttpResponse, Http404, HttpResponseRedirect
-from core.models import GeneralLink, Section
+from core.models import GeneralLink, Section, LinkType
+from django.db.models import Q
 
-
-def link_list(request, slug):
+def link_list(request, slug, type_slug=None):
     section = get_object_or_404(Section, slug=slug) # slug=areas -> Section=Sohalar
     # links = GeneralLink.objects.filter(section=section)
     links = section.generallink_set.all()
     linktypes = section.linktype_set.all()
+    filter_options = GeneralLink.objects.filter(
+        Q(section__slug='areas') | Q(section__slug='tools')
+    )
+    choosen_filter = request.GET.get('filter') # request.GET['filter']
+    if choosen_filter:
+        link = GeneralLink.objects.filter(slug=choosen_filter).first()
+        if link:
+            links = links.filter(tools__in=[link])
+    sort = request.GET.get('sort')
+    if sort in ('name', '-name', '-created_time', '-rating'):
+        links = links.order_by(sort)    
+    # filter_options = GeneralLink.objects.filter(section__slug='tools')
     context = {
         'section': section,
         'links': links,
-        'linktypes': linktypes
+        'linktypes': linktypes,
+        'filter_options': filter_options
     }
+    
+    if type_slug:
+        type = get_object_or_404(LinkType, slug=type_slug)
+        links = links.filter(type=type)
+        if sort in ('name', '-name', '-created_time', '-rating'):
+            links = links.order_by(sort)
+        context['links'] = links
+        context['type_slug'] = type_slug
+
     return render(request, "link_list.html", context) # shortcuts
 
 

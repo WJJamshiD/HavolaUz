@@ -9,10 +9,14 @@
         <div class="col-8 offset-2">
             <!--begin:: LINK TYPES -->
             <ul class="link-categories d-flex flex-row flex-wrap px-3 justify-content-center" style="gap:5px">
-                <li class="shadow active"><a>Barchasi</a></li>
+                <li class="shadow {% if not type_slug %}active{% endif %}">
+                    <a href="/{{section.slug}}">Barchasi</a>
+                </li>
                 {% for type in linktypes %}    
-                <li class="shadow"><a>{{type.name}}</a></li>
-                {% endfor %}
+                <li class="shadow {% if type_slug == type.slug %}active{% endif %}">
+                    <a href="/{{section.slug}}/{{type.slug}}">{{type.name}}</a>
+                </li>
+                {% endfor %}                
             </ul>
             <!--end:: LINK TYPES -->
             <p class="text-center" style="font-size: 1.1rem;">
@@ -44,26 +48,34 @@
                         </span>
                         <ul class="dropdown-menu border-0 custom-shadow" aria-labelledby="sortDropdown"
                                                                          data-bs-popper="none">
-                            <li><span class="dropdown-item" role="button">A-Z</span></li>
-                            <li><span class="dropdown-item" role="button">Z-A</span></li>
-                            <li><span class="dropdown-item" role="button">Yuqori reytingdagilar</span></li>
-                            <li><span class="dropdown-item" role="button">Eng so'ngilari</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="name" onclick="chooseSort">A-Z</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-name">Z-A</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-rating">Yuqori reytingdagilar</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-created_time">Eng so'ngilari</span></li>
                         </ul>
                     </span>
                 </span>
             </div>
-            <div class="filter-options d-none row link-card card flex-row w-100 mx-auto px-1 py-3 mt-2"
+            <div class="filter-options {% if not request.GET.filter %} d-none {% endif %} link-card card w-100 mx-auto px-1 py-3 mt-2"
                                                     style="border-radius:7px;">
+                
+              <form method="GET" class="row flex-row w-100 mx-auto">
                 <div class="col-8 col-md-9">
-                    <select class="form-control form-select py-1" style="background-color:#ededef;" role="button">
-                        <option>Tanlang</option>
-                        <option value="">3D Grafika</option>
-                        <option value="">1C Bitrix</option>
+                    <select class="form-control form-select py-1" name="filter"
+                        style="background-color:#ededef;" role="button">
+                        <option value="">Tanlang</option>
+                        {% for foption in filter_options %}
+                        <option value="{{foption.slug}}" 
+                          {% if request.GET.filter == foption.slug %} selected {% endif %}>
+                            {{foption.name}}
+                        </option>
+                        {% endfor %} 
                     </select>
                 </div>
                 <div class="col-4 col-md-3">
-                    <button class="w-100 bg-main text-white border-0 py-1 rounded">Filterlash</button>
+                    <button type="submit" class="w-100 bg-main text-white border-0 py-1 rounded filter">Filterlash</button>
                 </div>
+              </form>
             </div>
         </div>
     </div>
@@ -141,6 +153,11 @@
 {% block js %}
 
 <script type="text/javascript">
+    function chooseSort() {
+        var value = this.data().value;
+        console.log(value)
+    }
+
     document.addEventListener("DOMContentLoaded", function(event) {
         
         document.getElementById('toggleFilter').addEventListener('click',
@@ -155,7 +172,7 @@
                 filterWrapper.classList.toggle('d-none')
             }
         );
-
+    
     });
 </script>
   

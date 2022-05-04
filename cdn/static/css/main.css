@@ -107,3 +107,16 @@ ul.link-categories li.a{
     color: #fff;
     background-color: #6c757d;
 }
+.link-categories li a {
+    color:rgb(108, 117, 125);
+    text-decoration: none;
+}
+.link-categories li:hover a {
+    color:white;
+}
+.link-categories li.active a {
+    color: #fff;
+}
+button.filter:hover {
+    background-color: rgb(243 183 128)!important;
+}

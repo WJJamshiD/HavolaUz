@@ -42,10 +42,12 @@ class GeneralLink(models.Model):
     short_description = models.CharField(max_length=150)
     description = models.TextField(null=True, blank=True)
     tags = models.ManyToManyField("Tag", blank=True)
+    tools = models.ManyToManyField("GeneralLink", null=True, blank=True)
     company = models.ForeignKey("Company", on_delete=models.SET_NULL, null=True, blank=True)
     language = models.CharField(max_length=50, choices=LANGUAGES, null=True, blank=True)
     author = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.SlugField(max_length=250, unique=True)
+    rating = models.PositiveSmallIntegerField(default=0)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
