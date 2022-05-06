@@ -120,3 +120,44 @@ ul.link-categories li.a{
 button.filter:hover {
     background-color: rgb(243 183 128)!important;
 }
+.tools a {
+    color: #808080c4;
+    font-size: 0.7rem;
+    background: #ededefe3;
+    padding: 4px;
+    border-radius: 3px;
+    margin-right: 4px;
+}
+.tools a img {
+    margin-bottom: 3.5px;
+}
+.my-input {
+    width: 100%;
+    background: rgb(237, 237, 239);
+    font-weight: 500;
+    border-radius:5px;
+    border: 1px solid rgb(237, 237, 239);
+    outline-color: #ededef;
+    outline-width: 0;
+}
+.link-create .image-wrapper {
+    width: 165px;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: gray;
+    border-radius: 4px;
+}
+.photo-label {
+    background: #6c6c6c;
+    bottom: 0;
+    left: 0;
+    margin: 6px;
+    width: calc(100% - 12px);
+    border-radius: 4px;
+    padding: 4px;
+}
+.link-create .image-wrapper .fa-image {
+    font-size: 29px;
+    color: #8080809e;
+    margin-top: 30px;
+}

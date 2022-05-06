@@ -1,16 +1,23 @@
 from django import forms
 from django.forms import ValidationError
-# from .models import Link
-#  Error()
+from .models import GeneralLink
 
-# class LinkForm(forms.ModelForm):
+class GeneralLinkForm(forms.ModelForm):
 
-#     class Meta:
-#         model = Link
-#         fields = ['name', 'description', 'url'] # ('name', 'description', 'url')
-
-    # def clean_<field_name>(self):
-    #     pass    
+    class Meta:
+        model = GeneralLink
+        fields = [
+            'name',
+            'url',
+            'photo',
+            'section',
+            'type',
+            'short_description',
+            'description',
+            'tools',
+            'company',
+            'language'
+        ]
 
     # def clean_description(self):
     #     description = self.cleaned_data['description']

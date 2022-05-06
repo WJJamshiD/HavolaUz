@@ -36,7 +36,7 @@
                 <span class="d-flex" style="gap:6px">
                     <span>
                         <a class="nav-link dropdown-toggle bg-main plus text-white custom-shadow px-2 py-1 rounded"
-                            href="#" role="button">
+                            href="/create" role="button">
                             <i class="fa-solid fa-plus"></i>
                         </a>
                     </span>
@@ -47,11 +47,15 @@
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </span>
                         <ul class="dropdown-menu border-0 custom-shadow" aria-labelledby="sortDropdown"
-                                                                         data-bs-popper="none">
-                            <li><span class="dropdown-item sort" role="button" data-value="name" onclick="chooseSort">A-Z</span></li>
-                            <li><span class="dropdown-item sort" role="button" data-value="-name">Z-A</span></li>
-                            <li><span class="dropdown-item sort" role="button" data-value="-rating">Yuqori reytingdagilar</span></li>
-                            <li><span class="dropdown-item sort" role="button" data-value="-created_time">Eng so'ngilari</span></li>
+                                                                           data-bs-popper="none">
+                            <li><span class="dropdown-item sort" role="button"
+                                 data-value="name" data-test="123" onclick="chooseSort(event)">A-Z</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-name"
+                                onclick="chooseSort(event)">Z-A</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-rating"
+                                onclick="chooseSort(event)">Yuqori reytingdagilar</span></li>
+                            <li><span class="dropdown-item sort" role="button" data-value="-created_time"
+                                onclick="chooseSort(event)">Eng so'ngilari</span></li>
                         </ul>
                     </span>
                 </span>
@@ -59,7 +63,7 @@
             <div class="filter-options {% if not request.GET.filter %} d-none {% endif %} link-card card w-100 mx-auto px-1 py-3 mt-2"
                                                     style="border-radius:7px;">
                 
-              <form method="GET" class="row flex-row w-100 mx-auto">
+              <form method="GET" class="row flex-row w-100 mx-auto" id="filterForm">
                 <div class="col-8 col-md-9">
                     <select class="form-control form-select py-1" name="filter"
                         style="background-color:#ededef;" role="button">
@@ -71,6 +75,7 @@
                         </option>
                         {% endfor %} 
                     </select>
+                    <input type="hidden" name="sort" value="{{request.GET.sort}}" id="sort"/>
                 </div>
                 <div class="col-4 col-md-3">
                     <button type="submit" class="w-100 bg-main text-white border-0 py-1 rounded filter">Filterlash</button>
@@ -110,15 +115,30 @@
                         <div class="link-short-description">
                             <p class='mb-0'>{{link.short_description}}</p>
                         </div>
-                    
+                        
+                        {% if link.tools.count > 0 %}
+                        <div class="tools">
+                            {% for tool in link.tools.all %}
+                                <a href="/{{tool.slug}}" class="text-decoration-none text-hover-black">
+                                    <img src="{{tool.photo.url}}" width="13" height="13"/>
+                                    <span class="">{{tool.name}}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
                         <div class="link-buttons pt-2 d-flex pb-1" style="gap: .7rem;">
                             <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-graduation-cap"></i></button>
                             <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-book-open"></i></button>
                             <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-star"></i></button>
+                        
+                            {% if link.url %}
                             <a class="shadow border-0 bg-white ms-2 px-2 text-main-light btn-yellow text-decoration-none"
                                 style="border-radius:4px;cursor:pointer;">
                                 <i class="fa-solid fa-up-right-from-square"></i> Havola
                             </a>
+                            {% endif %}
+                        
                         </div>
                     </div>
                     
@@ -153,9 +173,33 @@
 {% block js %}
 
 <script type="text/javascript">
-    function chooseSort() {
-        var value = this.data().value;
-        console.log(value)
+    function chooseSort(e) {
+        console.log(e, typeof(e))
+        var sortValue = e.target.dataset.value;
+        document.getElementById('sort').value = sortValue;
+        document.getElementById('filterForm').submit();
+        // var value = e.target.dataset.value;
+        // console.log(value)
+        // if (window.location.search !== '') {
+        //    if (window.location.search.indexOf('sort=') >= 0) {
+        //        var query_params = window.location.search.slice(1)
+        //        query_params = query_params.split('&')
+        //        new_search = ''
+        //        for (let i=0; i < query_params.length; i++) {
+        //            let current_query_with_value = query_params[i]
+        //            if (current_query_with_value.indexOf('sort=') == 0) {
+        //                new_search = new_search + '&sort=' + value;
+        //            } else {
+        //                new_search = new_search + '&' + current_query_with_value
+        //            }
+        //        }
+        //        window.location = window.location.origin + window.location.pathname + '?' + new_search;
+        //    } else {
+        //        window.location = window.location.href + '&sort=' + value;
+        //    }
+        // } else {
+        //    window.location = window.location.href + '?sort=' + value;
+        // }
     }
 
     document.addEventListener("DOMContentLoaded", function(event) {

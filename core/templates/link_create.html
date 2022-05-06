@@ -1,44 +1,51 @@
-<!DOCTYPE html5>
-<html>
-    <head>
-        <title>Havola.uz</title>
-    </head>
-    <body>
-        <h1 style="text-align:center">Havola qo'shish</h1>
-    
-        <h2>HTML Forms</h2>
+{% extends 'base.html' %}
 
-        {% comment %} <form action="" method="POST"  class="" id="">
-        
-            <label for="">Link name:</label> <br>
-            <input type="text" name="name" placeholder="link nomini yozing..."
-                 value="{{data.name}}"    required />
-            <small style="color:red;"> {% if errors.name %}{{errors.name}}{% endif %} </small>
-            <br><br>
 
-            <label for="">Link description:</label> <br>
-            <textarea name="description" placeholder="link haqida izoh.."
-                >{{data.description}}</textarea>
-            </br><br>
-            
-            <label for=""> Link url</label> </br>
-            <input type="text" name="url" placeholder="link urlini ko'rsating" 
-                value="{{data.url}}" required />
-            <small style="color:red;"> {% if errors.url %}{{errors.url}}{% endif %} </small>
-            
-            <br><br>
-            
-            <input type="submit" value="Yuborish">
-            {% csrf_token %}
-        </form>  {% endcomment %}
-        <form method="POST"> {% csrf_token %}
-            {{form.as_p}}
-            {% comment %} {{form.as_ul}}  {% endcomment %}
-            <input type="submit" value="Yuborish">
-        </form>
+{% block content %}
 
-        <p>"Yuborish" tugmasi bosilganda kiritilgan ma'lumotlar POST metodi orqali
-            serverga jo'natiladi!!.</p>
+<div class="container pt-4 link-create">
 
-    </body>
-</html>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <p class="fs-3">Element qo'shish</p>
+            <!--begin:: LINK FORM -->
+            <form class="card link-card bg-white p-4" method="post" style="border-radius:6px;">
+                <div class="d-flex" style="gap: 25px">
+                    <div class="image-wrapper text-center position-relative">
+                        <img src="" class="d-none"/>
+                        <i class="fa-solid fa-image"></i>
+                        <label for="uploadImage" class="position-absolute text-white photo-label">
+                            <input type="file" name="photo" class="d-none" id="uploadImage"/>
+                            Rasm yuklash
+                        </label>
+                        <button class="d-none">O'chirish</button>
+                    </div>
+
+                    <div class="inputs-wrapper w-100" style="">
+                        <label class="mb-1">Nomi</label>
+                        <input type="text" name="name" class="my-input mb-2"
+                            value="{{form.name.value|default:''}}" required/>
+
+                        <label class="mb-1">Url</label>
+                        <input type="url" name="url" class="my-input"
+                            value="{{form.url.value|default:''}}"/>
+                    </div>
+                </div>
+            </form>
+            <!--end:: LINK FORM -->
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+
+<script type="text/javascript">
+</script>
+  
+{% endblock js %}
