@@ -3,7 +3,7 @@ from django.http.response import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.utils.text import slugify
-from core.models import GeneralLink, Section, LinkType
+from core.models import Company, GeneralLink, Section, LinkType
 from .forms import GeneralLinkForm
 
 
@@ -49,17 +49,28 @@ def link_detail(request, havola_idisi):
 
 
 def link_create(request):
-    form = GeneralLinkForm(request.POST or None) # 
+    form = GeneralLinkForm(data=request.POST or None, files=request.FILES or None) # 
+    context = {
+        'sections': Section.objects.all(),
+        'types': LinkType.objects.all(),
+        'tools': GeneralLink.objects.filter(
+                    Q(section__slug='areas') | Q(section__slug='tools')
+                ),
+        'companies': Company.objects.all(),
+        'form': form
+    }
 
     if request.method == 'POST':
+        print(request.POST)
         if form.is_valid(): # False
-            new_link = form.save() # model from
+            new_link = form.save(commit=False) # model from
             new_link.author = request.user
-            new_link = slugify(new_link.name)
+            new_link.slug = slugify(new_link.name)
             new_link.save()
             return redirect('/')
+        print(form.errors)
 
-    return render(request, 'link_create.html', {'form': form}) # 200 HTTP
+    return render(request, 'link_create.html', context) # 200 HTTP
 
 
 # def link_update(request, link_id):
@@ -73,3 +84,17 @@ def link_create(request):
 #             return redirect('/havolalar/') # domain.nomie/havolalar/
 
 #     return render(request, 'link_update.html', {'form': form})
+
+
+def like(request):
+    if request.method == 'POST':
+        try:
+            obj_type = request.POST['obj_type']
+            obj_id = int(request.POST['id'])
+            value = request.POST['value']
+            # like object
+        except Exception as e:
+            print(e)
+            pass
+            return HttpResponse(status=400)
+    return HttpResponse(status=403)

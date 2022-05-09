@@ -88,6 +88,21 @@ class Tag(models.Model):
         return self.name
 
 
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_likes')
+    type = models.CharField(max_length=10, choices=(('like', 'like'), ('dislike', 'dislike')))
+    link = models.ForeignKey(GeneralLink, on_delete=models.CASCADE, null=True, blank=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likees',
+                    null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+# like.author  -> user_id=5
+# like.user    -> user_id=3
+
+#user_id=5  -> user.owned_likes   | user.like_set | link.like_set | company.like_set
+#user_id=3  -> user.likees
+
 # TABLES (DATABASE) RELATIONS
 
 # Link  *   --->  1  Section

@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(252, 249, 246);
+}
+.bg-main {
+    background-color: rgb(255, 194, 137);;
+}
+.text-main {
+    color: rgb(255, 194, 137);
+}
+.form-control.search:focus {
+    color: red;
+    border: 1px solid #80808059!important;
+}

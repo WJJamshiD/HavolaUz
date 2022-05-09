@@ -139,6 +139,12 @@ button.filter:hover {
     border: 1px solid rgb(237, 237, 239);
     outline-color: #ededef;
     outline-width: 0;
+    font-size: .9rem;
+    font-weight: 400;
+    padding: 5px;
+}
+.my-input:focus {
+    border: 1px solid rgb(193, 193, 194);
 }
 .link-create .image-wrapper {
     width: 165px;
@@ -160,4 +166,18 @@ button.filter:hover {
     font-size: 29px;
     color: #8080809e;
     margin-top: 30px;
+}
+.link-create label {
+    font-size: 0.8rem;
+    padding-bottom: 3px;
+}
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+button.btn-secondary:hover {
+    color: #fff;
+    background-color: #5a6268!important;
+    border-color: #545b62!important;
 }
