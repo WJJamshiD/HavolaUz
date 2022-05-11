@@ -54,6 +54,27 @@ class GeneralLink(models.Model):
     def __str__(self):
         return self.name
 
+    def likes_count(self):
+        likes = self.like_set.filter(type='like').count()
+        dislikes = self.like_set.filter(type='dislike').count()
+        return likes - dislikes
+
+    def liked_users(self):
+        likes = self.like_set.filter(type='like')
+        author_ids = []
+        for like in likes:
+            author_ids.append(like.author.id)
+        return author_ids
+
+
+    def disliked_users(self):
+        likes = self.like_set.filter(type='dislike')
+        author_ids = []
+        for like in likes:
+            author_ids.append(like.author.id)
+        return author_ids
+
+
 
 class CompanyType(models.Model):
     name = models.CharField(max_length=150)
@@ -96,6 +117,8 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likees',
                     null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 # like.author  -> user_id=5
 # like.user    -> user_id=3

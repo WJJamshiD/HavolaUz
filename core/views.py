@@ -1,9 +1,11 @@
+import json
+from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http.response import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.utils.text import slugify
-from core.models import Company, GeneralLink, Section, LinkType
+from core.models import Company, GeneralLink, Like, Section, LinkType
 from .forms import GeneralLinkForm
 
 
@@ -86,13 +88,32 @@ def link_create(request):
 #     return render(request, 'link_update.html', {'form': form})
 
 
+@csrf_exempt
 def like(request):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
     if request.method == 'POST':
         try:
-            obj_type = request.POST['obj_type']
-            obj_id = int(request.POST['id'])
-            value = request.POST['value']
-            # like object
+            data = json.loads(request.body)   # json.loads: str or bytes --> dict 
+            obj_type = data['obj_type']
+            obj_id = int(data['id'])
+            value = data['value']
+            # request.user # AnonymousUser if user not logged in
+            if obj_type == 'link':
+                old_like = Like.objects.filter(author=request.user, link=obj_id).first()
+                if old_like:
+                    if old_like.type == value:
+                        old_like.delete()
+                    else:
+                        old_like.type = value
+                        old_like.save()
+                else:
+                    Like.objects.create(
+                        author=request.user,
+                        link_id=obj_id,
+                        type=value
+                    )
+            return HttpResponse(status=200)
         except Exception as e:
             print(e)
             pass

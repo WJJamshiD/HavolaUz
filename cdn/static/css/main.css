@@ -181,3 +181,11 @@ button.btn-secondary:hover {
     background-color: #5a6268!important;
     border-color: #545b62!important;
 }
+.like-btn.active {
+    background-color: #ffc289!important;
+    color: white;
+}
+.like-btn.active:hover {
+    background-color: #f0b37a!important;
+    color: white;
+}
