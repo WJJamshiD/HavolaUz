@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load bookmarking %}
 
 
 {% block content %}
@@ -86,7 +86,7 @@
     </div>
 
     <!--begin:: LIST OF LINKS-->
-    <div class="row">
+    <div class="row" id="linkWrapper" data-page-number="1">
         
         {% for link in links %}
         <!--begin: SINGLE LINK CARD-->
@@ -128,9 +128,23 @@
                         {% endif %}
 
                         <div class="link-buttons pt-2 d-flex pb-1" style="gap: .7rem;">
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-graduation-cap"></i></button>
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-book-open"></i></button>
-                            <button class="shadow border-0 bg-white gray-color" style="border-radius:4px;"><i class="fa-solid fa-star"></i></button>
+                            {% is_bookmarked link request.user 'K' as is_known %}
+                            <button class="shadow border-0 bg-white gray-color bookmark-btn {% if is_known %}active{% endif %}"
+                                    data-status='K' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </button>
+                            
+                            {% is_bookmarked link request.user 'L' as is_learning %}
+                            <button class="shadow border-0 bg-white gray-color bookmark-btn {% if is_learning %}active{% endif %}"
+                                    data-status='L' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                <i class="fa-solid fa-book-open"></i>
+                            </button>
+                            
+                            {% is_bookmarked link request.user 'W' as is_wondered %}
+                            <button class="shadow border-0 bg-white gray-color bookmark-btn {% if is_wondered %}active{% endif %}"
+                                    data-status='W' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                <i class="fa-solid fa-star"></i>
+                            </button>
                         
                             {% if link.url %}
                             <a class="shadow border-0 bg-white ms-2 px-2 text-main-light btn-yellow text-decoration-none"
@@ -278,6 +292,59 @@
 
             })
         })      
+
+        document.querySelectorAll('.bookmark-btn').forEach(function(element){
+            element.addEventListener('click', function(e) {
+                
+              {% if request.user.is_authenticated %}
+                var status = element.dataset.status;  // data-status
+                var objId = element.dataset.linkId; // data-link-id --> linkId
+                console.log(status, objId)
+                
+                const data = { 
+                    'status': status
+                };
+                console.log(data)
+                fetch(`http://localhost:8000/link/${objId}/bookmark`, {
+                    method: 'POST', // or 'PUT'
+                    headers: {
+                        'Content-Type': 'application/json', 
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(res => {
+                    console.log(res)
+                    element.parentElement.querySelectorAll('.bookmark-btn').forEach(function(btn){
+                        btn.classList.remove('active')
+                    });
+                    element.classList.add('active')                    
+                }).catch((err) => {
+                    console.error('Error:', err);
+                    alert('Something went wrong! Please try again later.')
+                });
+              {% else %}
+                alert('Iltimos bu funksiyadan foydalanish uchun avval tizimga kiring!')    
+              {% endif %}
+
+            })
+        })      
+    
+        window.onscroll = function(ev) {
+            // check if user scrolled to the bottom of the page
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                
+                let pageNumber = parseInt(document.getElementById('linkWrapper').dataset.pageNumber)+1
+                fetch(`http://localhost:8000/{{slug}}?page=${pageNumber}&format=json`)
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((err) => {
+                    console.error('Error:', err);
+                    alert('Something went wrong! Please try again later.')
+                });
+
+            }
+        };
+    
     });
 </script>
   

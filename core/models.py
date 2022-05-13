@@ -75,7 +75,6 @@ class GeneralLink(models.Model):
         return author_ids
 
 
-
 class CompanyType(models.Model):
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)

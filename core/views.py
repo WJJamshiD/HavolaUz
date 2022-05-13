@@ -1,10 +1,12 @@
 import json
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http.response import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template import loader
 from django.utils.text import slugify
+from users.models import BookmarkedLink
 from core.models import Company, GeneralLink, Like, Section, LinkType
 from .forms import GeneralLinkForm
 
@@ -24,13 +26,18 @@ def link_list(request, slug, type_slug=None):
             links = links.filter(tools__in=[link])
     sort = request.GET.get('sort')
     if sort in ('name', '-name', '-created_time', '-rating'):
-        links = links.order_by(sort)    
+        links = links.order_by(sort)
+
+    page = int(request.GET.get('page', 1)) # har bir page da 10tadan link chiqsin
+    format = request.GET.get('format', 'html')
+    links = links[(page-1)*3:page*3]  # page=1 -> links[0:10] | page=2  -> links[10:20]
     # filter_options = GeneralLink.objects.filter(section__slug='tools')
     context = {
         'section': section,
         'links': links,
         'linktypes': linktypes,
-        'filter_options': filter_options
+        'filter_options': filter_options,
+        'slug': slug
     }
     
     if type_slug:
@@ -41,6 +48,18 @@ def link_list(request, slug, type_slug=None):
         context['links'] = links
         context['type_slug'] = type_slug
 
+    if format == 'json':
+        print('returned json')
+        return JsonResponse(data={
+            'links': [{
+                'id': link.id,
+                'photo_url': link.photo.url,
+                'name': link.name
+                # ...
+            } for link in links],   # [{....} for link in links]
+            'page': page
+        })
+        # {'links': [], 'page': 1}
     return render(request, "link_list.html", context) # shortcuts
 
 
@@ -116,6 +135,24 @@ def like(request):
             return HttpResponse(status=200)
         except Exception as e:
             print(e)
-            pass
+            return HttpResponse(status=400)
+    return HttpResponse(status=403)
+
+
+@csrf_exempt
+def bookmarking(request, link_id):
+    if not request.user.is_authenticated:
+        return HttpResponse(status=401)
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)   # json.loads: str or bytes --> dict 
+            status = data['status']
+            obj_id = link_id
+            bookmark, created = BookmarkedLink.objects.get_or_create(user=request.user, link_id=obj_id) # -> (bookmark obj, True/False)
+            bookmark.status = status
+            bookmark.save()
+            return HttpResponse(status=200)
+        except Exception as e:
+            print(e)
             return HttpResponse(status=400)
     return HttpResponse(status=403)

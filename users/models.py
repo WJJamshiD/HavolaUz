@@ -7,7 +7,7 @@ from django.contrib.auth.models import (
 )
 from django.conf import settings
 from django.core.mail import send_mail
-
+# from core.models import GeneralLink
 
 class CustomUserManager(BaseUserManager):
 
@@ -58,6 +58,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField('Date joined', auto_now_add=True)
     token_for_activation = models.CharField(max_length=50, null=True, blank=True)
+    # learning_tools = models.ManyToManyField("core.GeneralLink", blank=True)
+    # wondered_tools = models.ManyToManyField("core.GeneralLink", blank=True)
+    # learnt_tools = models.ManyToManyField("core.GeneralLink", blank=True)
 
     USERNAME_FIELD = 'email' # null=False, unique=True
 
@@ -74,3 +77,15 @@ class User(AbstractBaseUser, PermissionsMixin):
             from_email=settings.DEFAULT_FROM_EMAIL,
             fail_silently=kwargs.get('fail_silently', True)
         )
+
+
+class BookmarkedLink(models.Model):
+    STATUS = (
+        ('L', "O'qiyapman"),
+        ('W', "O'rganishni xohlayman"),
+        ('K', "Bilaman")
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookmarks')   # user.bookmarks.
+    link = models.ForeignKey("core.GeneralLink", on_delete=models.CASCADE)
+    status = models.CharField(max_length=50, choices=STATUS, default=STATUS[0][0])
+    created_at = models.DateTimeField(auto_now_add=True)
