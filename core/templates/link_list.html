@@ -86,7 +86,7 @@
     </div>
 
     <!--begin:: LIST OF LINKS-->
-    <div class="row" id="linkWrapper" data-page-number="1">
+    <div class="row" id="linkWrapper" data-page-number="1" data-page-end="">
         
         {% for link in links %}
         <!--begin: SINGLE LINK CARD-->
@@ -102,7 +102,7 @@
                     <div class="content w-100">
                         <div class="link-title">
                             <h3 class="mb-0">
-                                <a href="" class="text-main-hover">{{link.name}}</a>
+                                <a href="/e/{{link.slug}}" class="text-main-hover">{{link.name}}</a>
                             </h3>
                         </div>
                         
@@ -333,15 +333,121 @@
             // check if user scrolled to the bottom of the page
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
                 
+                if (document.getElementById('linkWrapper').dataset.pageEnd === 'true') {
+                    return;
+                }
                 let pageNumber = parseInt(document.getElementById('linkWrapper').dataset.pageNumber)+1
                 fetch(`http://localhost:8000/{{slug}}?page=${pageNumber}&format=json`)
                 .then(response => response.json())
-                .then(data => console.log(data))
+                .then(data => {
+                    document.getElementById('linkWrapper').setAttribute('data-page-number', data['page']);
+                    console.log(data)
+                    data['links'].forEach(function(link) {
+                        _html = `
+                            <!--begin: SINGLE LINK CARD-->
+                            <div class="col-8 offset-2 px-4 mb-3">
+                                <div class="link-card card border-0 d-flex flex-row p-1" style="border-radius:7px;">
+                                    <div class="image-wrapper m-2 overflow-hidden" style="width:75px;height:75px;">
+                                        <a src="">
+                                            <img class="w-100" src="${link['photo_url']}"/>
+                                        </a>    
+                                    </div>
+                                    
+                                    <div class="content-wrapper my-2 px-1 d-flex flex-row" style="width: calc(100% - 80px);">
+                                        <div class="content w-100">
+                                            <div class="link-title">
+                                                <h3 class="mb-0">
+                                                    <a href="/e/${link.slug}" class="text-main-hover">${link.name}</a>
+                                                </h3>
+                                            </div>
+                                            
+                                            <div class="link-type">
+                                                <a class="mb-0 text-decoration-none text-hover-black" style="color: #808080c4;">
+                                                    ${link.type}
+                                                </a>
+                                            </div>
+                                            
+                                            <div class="link-short-description">
+                                                <p class='mb-0'>${link.short_description}</p>
+                                            </div>
+                            `
+                        // adding tools if exists
+                        if (link.tools.length > 0) {
+                            _html += '<div class="tools">';
+                              for (let i=0; i<link.tools.length; i++) {
+                                _html += `
+                                    <a href="/${link.tools[i].slug}" class="text-decoration-none text-hover-black">
+                                        <img src="${link.tools[i].photo_url}" width="13" height="13"/>
+                                        <span class="">${link.tools[i].name}</span>
+                                    </a>
+                                `
+                              }
+                            _html += '</div>'
+                        }
+                        
+                        _html += `
+                            <div class="link-buttons pt-2 d-flex pb-1" style="gap: .7rem;">
+                                <button class="shadow border-0 bg-white gray-color bookmark-btn ${link.status === 'K' ? 'active': ''}"
+                                        data-status='K' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </button>
+                                
+                                <button class="shadow border-0 bg-white gray-color bookmark-btn ${link.status === 'L' ? 'active': ''}"
+                                        data-status='L' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </button>
+                                
+                                <button class="shadow border-0 bg-white gray-color bookmark-btn ${link.status === 'W' ? 'active': ''}"
+                                        data-status='W' data-link-id="{{link.id}}" style="border-radius:4px;">
+                                    <i class="fa-solid fa-star"></i>
+                                </button>
+                        `
+                        
+                        if (link.url) {
+                            _html += `
+                                <a href="${link.url}" class="shadow border-0 bg-white ms-2 px-2 text-main-light btn-yellow text-decoration-none"
+                                    style="border-radius:4px;cursor:pointer;">
+                                    <i class="fa-solid fa-up-right-from-square"></i> Havola
+                                </a>
+                            `
+                        }              
+                                        
+                        _html += `
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="like-wrapper d-flex flex-column align-items-center my-2 ms-4 me-2">
+                                            
+                                            <button class="shadow border-0 bg-white gray-color like-btn ${ link.is_liked ? 'active': ''}" style="border-radius:4px;"
+                                                    data-type='like' data-obj-type='link' data-obj-id="${link.id}">
+                                                <i class="fa-solid fa-chevron-up"></i>
+                                            </button>
+
+                                            <p class="link-rate my-1" id="obj${link.id}Like">${link.likes_count}</p>
+                                            
+                                            <button class="shadow border-0 bg-white gray-color like-btn ${ link.is_disliked ? 'active': ''}" style="border-radius:4px;"
+                                                    data-type='dislike' data-obj-type='link' data-obj-id="${link.id}">
+                                                <i class="fa-solid fa-chevron-down"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end: SINGLE LINK CARD-->
+                        `
+                        $('#linkWrapper').append(_html);
+
+                    });
+                    if (data['links'].length === 0) {
+                        document.getElementById('linkWrapper').setAttribute('data-page-end', 'true');
+                        console.log('new value setted')
+                        console.log(document.getElementById('linkWrapper').dataset.pageEnd)
+                    }
+                })
                 .catch((err) => {
                     console.error('Error:', err);
                     alert('Something went wrong! Please try again later.')
                 });
-
             }
         };
     

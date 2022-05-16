@@ -6,15 +6,15 @@
             class="d-inline-block align-text-top">
         Havola
     </a>
-    <form class="d-none d-sm-block" style="width: calc(90% - 202px);">
+    <form class="d-none d-sm-block" style="width: calc(90% - 202px);" method="GET" action="">
       <div class="input-group" style="position:relative;">
         <span class="input-group-text border-0" style="position:absolute;left:0;top:5px;z-index: 9999;">
           <i class="fa-solid fa-magnifying-glass" style="color: #21252991;"></i>
         </span>
-        <input class="form-control me-2 border-0 search" type="search"
+        <input class="form-control me-2 border-0 search" type="search" name="q"
           style="width:54vw;background:rgb(237, 237, 239);font-weight:500;padding-left:41px;
             border-top-left-radius:5px; border-bottom-left-radius:5px;"
-          placeholder="Izlash..." aria-label="Search">
+          placeholder="Izlash..." aria-label="Search" value="{{request.GET.q}}">
       </div>
     </form>
     <div class="">

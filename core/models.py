@@ -48,6 +48,7 @@ class GeneralLink(models.Model):
     author = models.ForeignKey("users.User", on_delete=models.SET_NULL, null=True, blank=True)
     slug = models.SlugField(max_length=250, unique=True)
     rating = models.PositiveSmallIntegerField(default=0)
+    views_count = models.PositiveIntegerField(default=0)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
@@ -73,6 +74,18 @@ class GeneralLink(models.Model):
         for like in likes:
             author_ids.append(like.author.id)
         return author_ids
+
+    def status(self, user):
+        users_bookmark = self.bookmarkedlink_set.filter(user=user).first()
+        if users_bookmark:
+            return users_bookmark.status
+        return ''
+
+    def is_liked(self, user):
+        users_like = self.like_set.filter(author=user).first()
+        if users_like:
+            return users_like.type # like, dislike
+        return ''
 
 
 class CompanyType(models.Model):
